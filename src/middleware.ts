@@ -13,7 +13,9 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/api/users/profile/:path*"],
+  matcher: [
+    "/api/users/profile/:path*", // Matches /api/users/profile and any sub-paths
+    "/api/comments/:path*", // Matches /api/comments and any sub-paths
+  ],
 };

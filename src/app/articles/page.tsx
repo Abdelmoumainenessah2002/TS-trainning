@@ -5,9 +5,7 @@ import { Metadata } from 'next';
 import SearchArticleInput from '@/components/articles/SearchArticleInput';
 import Pagination from '@/components/articles/Pagination';
 
-const ArticlesPage = async () => {
-
-  await new Promise((resolve) => setTimeout(resolve, 1000));  
+const ArticlesPage = async () => { 
 
   const response = await fetch(
     'https://jsonplaceholder.typicode.com/posts',

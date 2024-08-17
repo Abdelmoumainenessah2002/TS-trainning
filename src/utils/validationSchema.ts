@@ -57,3 +57,39 @@ export const loginSchema = z.object({
   })
   .min(6, { message: "Password should be at last 6 characters long" }),
 });
+
+
+// Create a schema for updating a user
+export const updateUserSchema = z.object({
+  email: z.string({
+    invalid_type_error: "Email must be a string",
+  })
+  .email({ message: "Invalid email" }),
+
+  password: z.string({
+    invalid_type_error: "Password must be a string",
+  })
+  .min(6, { message: "Password should be at last 6 characters long" }),
+
+  username: z.string({
+    invalid_type_error: "Username must be a string",
+  })
+  .min(2, { message: "Username should be at last 2 characters long" })
+  .max(50, { message: "Username should be at most 50 characters long" }),
+});
+
+
+// Create a schema for creating a comment
+export const createCommentSchema = z.object({
+  text: z.string({
+    required_error: "Text is required",
+    invalid_type_error: "Text must be a string",
+  })
+  .min(2, { message: "Text should be at last 2 characters long" })
+  .max(200, { message: "Text should be at most 200 characters long" }),
+
+  articleId: z.number({
+    required_error: "ArticleId is required",
+    invalid_type_error: "ArticleId must be a number",
+  }),
+});

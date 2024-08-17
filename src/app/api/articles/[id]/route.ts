@@ -1,6 +1,7 @@
 import { UpdateArticleDto } from "@/utils/Dtos";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/db";
+import { verifyToken } from "@/utils/verifyToken";
 
 
 
@@ -22,8 +23,21 @@ export async function GET(request: NextRequest, { params }: Props) {
     // Find article by id
     const article = await prisma.article.findUnique({
       where: {
-        id: parseInt(params.id),
-      },
+        id: parseInt(params.id)},
+      include: {
+        comments: {
+          include: {
+            user: {
+              select: {
+                username: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc'
+          },
+        },
+      }
     });
 
     if (!article) { 
@@ -40,7 +54,7 @@ export async function GET(request: NextRequest, { params }: Props) {
  * @method PUT
  * @route ~/api/articles/:id
  * @description Update single article by id
- * @access public
+ * @access Private (Admin)
  */
 
 export async function PUT(request: NextRequest, { params }: Props) {
@@ -55,6 +69,15 @@ export async function PUT(request: NextRequest, { params }: Props) {
       return NextResponse.json(
         { message: "Article not found" },
         { status: 404 }
+      );
+    }
+
+    const user = verifyToken(request);
+    
+    if (user === null || user.isAdmin == false) {
+      return NextResponse.json(
+        { message: "You are not authorized to perform this action" },
+        { status: 401 }
       );
     }
 
@@ -82,7 +105,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
  * @method Delete
  * @route ~/api/articles/:id
  * @description Delete single article by id
- * @access public
+ * @access Private (Admin)
  */
 
 export async function DELETE(request: NextRequest, { params }: Props) {
@@ -91,6 +114,9 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       where: {
         id: parseInt(params.id),
       },
+      include : {
+        comments: true
+      }
     });
 
     if (!article) {
@@ -100,14 +126,36 @@ export async function DELETE(request: NextRequest, { params }: Props) {
       );
     }
 
+    const user = verifyToken(request);
+
+    if (user === null || user.isAdmin == false) {
+      return NextResponse.json(
+        { message: "You are not authorized to perform this action" },
+        { status: 401 }
+      );
+    }
+    
+    // Delete article
     await prisma.article.delete({
       where: {
         id: parseInt(params.id),
       },
     });
 
+    //Delete The Comments of this article
+    const commentsIds = article?.comments.map(comment => comment.id);
+    
+    await prisma.comment.deleteMany({
+      where: {
+        id: {
+          in: commentsIds
+        }
+      }
+    });
+
     return NextResponse.json({ message: "Article Deleted" }, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

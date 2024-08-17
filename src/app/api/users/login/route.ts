@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "Authenticated", cookie },
+      { message: "Authenticated" },
       { status: 200, headers: { "Set-Cookie": cookie } }
     );
   } catch (error) {
