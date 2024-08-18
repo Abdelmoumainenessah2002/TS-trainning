@@ -1,17 +1,34 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { DOMAIN } from "@/utils/constants";
 
-const AddCommentForm = () => {
+
+interface AddCommentFormProps {
+    articleId : number
+} 
+
+const AddCommentForm = ({ articleId }: AddCommentFormProps) => {
+  const router = useRouter()
   const [text, setText] = useState("");
 
-  const formSubmitHandler = (e: React.FormEvent) => {
+  const formSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim() === "") {
       return toast.error("Comment cannot be empty");
     }
 
-    e.preventDefault();
+    try {
+      await axios.post(`${DOMAIN}/api/comments/`, {text, articleId})
+      router.refresh()
+      setText("")
+    } catch (error: any) {
+      toast.error(error?.response?.data.message);
+      console.log(error);
+    }
+    
   };
 
   return (

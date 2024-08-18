@@ -71,8 +71,6 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   }
 }
 
-
-
 /**
  * @method GEt
  * @route ~/api/users/profile/:id

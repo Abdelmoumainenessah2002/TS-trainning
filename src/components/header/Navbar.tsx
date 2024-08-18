@@ -1,10 +1,10 @@
+'use client'
 import React, { useState } from "react";
 import { GrTechnology } from "react-icons/gr";
 import styles from "./header.module.css";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
-
 const Navbar = () => {
   const [toogle, setToggle] = useState(false);
 
@@ -41,7 +41,7 @@ const Navbar = () => {
           <Link
             onClick={() => setToggle(false)}
             className={styles.navLink}
-            href="/articles"
+            href="/articles?pageNumber=1"
           >
             Articles
           </Link>
