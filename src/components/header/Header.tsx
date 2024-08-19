@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <Navbar />
+      <Navbar isAdmin={payload?.isAdmin}/>
       <div className={styles.right}>
         {payload ? (
           <>

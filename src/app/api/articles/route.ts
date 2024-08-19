@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     const articles = await prisma.article.findMany({
       skip: pageNumber ? (parseInt(pageNumber) - 1) * articlePerPage : 0,
       take: articlePerPage,
+      orderBy: {createdAt : 'desc'}
     });
     return NextResponse.json(articles, { status: 200 });
   } catch (error) {

@@ -5,7 +5,12 @@ import styles from "./header.module.css";
 import Link from "next/link";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoMdClose } from "react-icons/io";
-const Navbar = () => {
+
+interface NavbarProps {
+  isAdmin : boolean | undefined
+}
+
+const Navbar = ({isAdmin} : NavbarProps) => {
   const [toogle, setToggle] = useState(false);
 
   return (
@@ -52,13 +57,15 @@ const Navbar = () => {
           >
             About
           </Link>
-          <Link
-            onClick={() => setToggle(false)}
-            className={styles.navLink}
-            href="/admin"
-          >
-            Admin Dashbord
-          </Link>
+          {isAdmin && (
+            <Link
+              onClick={() => setToggle(false)}
+              className={styles.navLink}
+              href="/admin"
+            >
+              Admin Dashbord
+            </Link>
+          )}
         </ul>
       </div>
     </nav>

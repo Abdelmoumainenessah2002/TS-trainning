@@ -5,11 +5,6 @@ import { redirect } from "next/navigation";
 
 const LoginPage = () => {
   
-  const token = cookies().get("authToken")?.value || "";
-  if (token) {
-    return redirect("/");
-  }
-
   return (
     <section className="fix-height container m-auto px-7 flex items-center justify-center">
       <div className="m-auto bg-white rounded-lg p-5 w-full md:w-2/3">
